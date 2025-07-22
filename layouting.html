@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museum Layouting Web dengan Tailwind CSS</title>
+    <!-- 1. Skrip Ajaib: Mengaktifkan Tailwind CSS melalui Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 font-sans">
+
+    <div class="max-w-4xl mx-auto py-10 px-5">
+        <h1 class="text-center text-4xl font-bold text-slate-800 mb-10">Layouting & Positioning</h1>
+
+        <!-- ==        BAGIAN 1: LAYOUTING              == -->
+        <h2 class="text-3xl font-bold text-slate-700 mt-8 mb-4">1. Layouting</h2>
+        
+        <!-- GRID LAYOUT -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-xl font-bold text-blue-600 mb-2">a. CSS Grid</h3>
+            <div class="grid grid-cols-3 gap-4 text-white text-center font-bold">
+                <div class="bg-blue-800 p-6 rounded-lg col-span-3">Header</div>
+                <div class="bg-blue-500 p-6 rounded-lg col-span-2 h-32">Main Content</div>
+                <div class="bg-blue-500 p-6 rounded-lg h-32">Sidebar</div>
+            </div>
+        </div>
+        
+        <!-- FLEXBOX LAYOUT -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-xl font-bold text-purple-600 mb-2">b. Flexbox</h3>
+            <div class="flex justify-between items-center bg-purple-600 p-4 rounded-lg text-white font-bold">
+                <div class="bg-purple-500 p-4 rounded-lg">Logo</div>
+                <div class="flex gap-4">
+                    <div class="bg-purple-500 p-4 rounded-lg">Home</div>
+                    <div class="bg-purple-500 p-4 rounded-lg">About</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MULTI-COLUMN LAYOUT -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            <h3 class="text-xl font-bold text-teal-600 mb-2">c. Multi-column</h3>
+            <div class="columns-3 gap-x-8 text-justify">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Nunc at mi ac velit ullamcorper tincidunt. Curabitur vel justo sed turpis fermentum convallis. Ut vitae eros non eros suscipit sollicitudin. Sed dictum, nunc non ullamcorper consequat, leo velit facilisis ligula, eu congue justo purus sit amet sapien. Praesent sed tincidunt justo. Pellentesque vitae dolor sit amet neque aliquam blandit.
+            </div>
+        </div>
+        
+        <!-- ==  BAGIAN 2: POSITIONING  == -->
+        <h2 class="text-3xl font-bold text-slate-700 mt-16 mb-4">2. Positioning </h2>
+        
+        <!-- a. POSITION STATIC (DEFAULT) -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-xl font-bold text-slate-500 mb-2">a. Static (Normal / default)</h3>
+            <div class="static top-4 left-4 bg-slate-200 p-4 rounded-lg border-2 border-slate-300">
+                Box ini punya `position: static`.
+            </div>
+        </div>
+
+        <!-- b. POSITION RELATIVE -->
+       <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-xl font-bold text-indigo-600 mb-2">b. Relative (Posisi Sadar)</h3>            
+            <!-- Container untuk tiga kotak kita -->
+            <div class="flex flex-col items-center space-y-4">
+                
+                <!-- Kotak 1 (Normal) -->
+                <div class="h-20 w-full bg-slate-400 text-white font-bold rounded-lg flex items-center justify-center">
+                    Kotak 1
+                </div>
+
+                <!-- Kotak 2 (Relative) -->
+               <div class="relative bottom-6 z-10 h-20 w-full bg-indigo-600 text-white font-bold rounded-lg flex items-center justify-center shadow-lg">
+                        Kotak 2 (relative bottom-6)
+                    </div>
+
+                <!-- Kotak 3 (Normal) -->
+                <div class="h-20 w-full bg-slate-400 text-white font-bold rounded-lg flex items-center justify-center">
+                    Kotak 3
+                </div>
+            </div>
+        </div>
+        
+        <!-- c. POSITION ABSOLUTE -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+            <h3 class="text-xl font-bold text-green-600 mb-2">c. Absolute (Keluar dari Alur)</h3>
+            <div class="relative h-40 bg-green-100 rounded-lg p-4 pt-8 border-2 border-green-300">
+                <p>Ini adalah kartu produk.</p>
+                <div class="absolute top-[-1rem] right-[-1rem] bg-green-600 text-white font-bold h-12 w-12 rounded-full flex items-center justify-center transform rotate-12">
+                    -20%
+                </div>
+            </div>
+        </div>
+
+        <!-- d. POSITION STICKY -->
+        <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+             <h3 class="text-xl font-bold text-rose-600 mb-2">d. Sticky</h3>
+             <div class="h-60 overflow-y-auto border border-slate-200 rounded-lg">
+                <div class="p-4 text-slate-500">Konten Awal...<br>Scroll ke bawah untuk melihat efek...<br>...<br>...<br></div>
+                <h4 class="sticky top-0 bg-rose-500 text-white p-4 font-bold">Kategori Produk (sticky top-0)</h4>
+                <div class="p-4">Item 1<br>Item 2<br>Item 3<br>Item 4<br>Item 5<br>...<br>...<br>...</div>
+             </div>
+        </div>
+        
+        <!-- e. POSITION FIXED (Tombol Kembali ke Atas) -->
+        <div class="fixed bottom-6 right-6">
+            <button class="bg-gray-800 text-white font-bold w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                </svg>
+            </button>
+        </div>
+
+    </div>
+    <div class="h-[100vh]"></div>
+</body>
+</html>
