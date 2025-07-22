@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Praktik Form & Web Storage Lengkap</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 20px; line-height: 1.6; background-color: #f7f9fc; color: #333; }
+        .container { max-width: 700px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 6px burdensome-lookpx rgba(0,0,0,0.08); margin-bottom: 30px; }
+        h1, h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0;}
+        h3 { color: #34495e; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="text"], input[type="email"], select { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #bdc3c7; border-radius: 5px; box-sizing: border-box; }
+        .hobby-group label { font-weight: normal; display: inline-block; margin-right: 15px; }
+        .hobby-group input[type="checkbox"] { margin-right: 5px; }
+        button { padding: 12px 20px; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; font-size: 16px; margin-right: 10px; margin-top: 10px; }
+        .btn-submit { background-color: #f47207; width: 100%; }
+        .btn-submit:hover { background-color: #229954; }
+        .btn-action { background-color: #3498db; }
+        .btn-action:hover { background-color: #2980b9; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-danger:hover { background-color: #c0392b; }
+        .data-display, .storage-box { margin-top: 20px; background-color: #ecf0f1; border-left: 5px solid #3498db; padding: 20px; border-radius: 5px; }
+        pre { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; }
+        code { color: #e74c3c; font-weight: bold; }
+        small { color: #7f8c8d; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form Sederhana</h1>
+        <form id="profile-form">
+            <div>
+                <label for="username">Nama Pengguna:</label>
+                <input type="text" id="username" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div>
+                <label for="jurusan">Jurusan:</label>
+                <select id="jurusan" required>
+                    <option value="">-- Pilih Jurusan --</option>
+                    <option value="Informatika">Informatika</option>
+                    <option value="Rekayasa Perangkat Lunak">Rekayasa Perangkat Lunak</option>
+                    <option value="Teknologi Informasi">Teknologi Informasi</option>
+                    <option value="Sains Data">Sains Data</option>
+                </select>
+            </div>
+            <div>
+                <label>Hobi:</label>
+                <div class="hobby-group">
+                    <label><input type="checkbox" name="hobby" value="Membaca"> Membaca</label>
+                    <label><input type="checkbox" name="hobby" value="Olahraga"> Olahraga</label>
+                    <label><input type="checkbox" name="hobby" value="Koding"> Koding</label>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit">Simpan Profil</button>
+        </form>
+
+        <div id="profile-display-container" class="data-display" style="display: none;">
+            <h3>Data Profil Tersimpan:</h3>
+            <pre id="profile-display"></pre>
+            <button id="clear-profile-btn" class="btn-danger">Hapus Data Profil</button>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Eksperimen Local vs. Session Storage</h2>
+        <p>Gunakan area ini untuk melihat perbedaan langsung antara dua jenis storage.</p>
+        <div>
+            <label for="experiment-input">Teks untuk Eksperimen:</label>
+            <input type="text" id="experiment-input" placeholder="Ketik sesuatu di sini...">
+        </div>
+        <button id="save-local-btn" class="btn-action">Simpan ke Local</button>
+        <button id="save-session-btn" class="btn-action">Simpan ke Session</button>
+        <button id="clear-experiment-btn" class="btn-danger">Hapus Eksperimen</button>
+
+        <div class="storage-box">
+            <p>Nilai di <strong>Local Storage</strong>: <code id="local-value">Kosong</code></p>
+            <small>(Data ini akan tetap ada meskipun browser/tab ditutup)</small>
+        </div>
+        <div class="storage-box">
+            <p>Nilai di <strong>Session Storage</strong>: <code id="session-value">Kosong</code></p>
+            <small>(Data ini akan HILANG jika browser/tab ditutup)</small>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // === KUNCI PENYIMPANAN ===
+        const PROFILE_KEY = 'userProfileData';
+        const LOCAL_EXP_KEY = 'localExperimentValue';
+        const SESSION_EXP_KEY = 'sessionExperimentValue';
+        
+        // === ELEMEN DOM BAGIAN 1 (FORM PROFIL) ===
+        const profileForm = document.getElementById('profile-form');
+        const profileDisplayContainer = document.getElementById('profile-display-container');
+        const profileDisplay = document.getElementById('profile-display');
+        const clearProfileBtn = document.getElementById('clear-profile-btn');
+        
+        // === ELEMEN DOM BAGIAN 2 (EKSPERIMEN) ===
+        const experimentInput = document.getElementById('experiment-input');
+        const saveLocalBtn = document.getElementById('save-local-btn');
+        const saveSessionBtn = document.getElementById('save-session-btn');
+        const clearExperimentBtn = document.getElementById('clear-experiment-btn');
+        const localValueDisplay = document.getElementById('local-value');
+        const sessionValueDisplay = document.getElementById('session-value');
+        
+        // --- LOGIKA FORM PENDAFTARAN ---
+        
+        profileForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const hobbyCheckboxes = document.querySelectorAll('input[name="hobby"]:checked');
+            const selectedHobbies = Array.from(hobbyCheckboxes).map(cb => cb.value);
+
+            const userProfile = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                jurusan: document.getElementById('jurusan').value,
+                hobbies: selectedHobbies,
+                savedAt: new Date().toLocaleTimeString('id-ID')
+            };
+
+            localStorage.setItem(PROFILE_KEY, JSON.stringify(userProfile, null, 2));
+            alert('Profil berhasil disimpan ke Local Storage!');
+            displayProfileData();
+        });
+
+        clearProfileBtn.addEventListener('click', () => {
+            localStorage.removeItem(PROFILE_KEY);
+            alert('Data profil telah dihapus.');
+            displayProfileData();
+            profileForm.reset();
+        });
+
+        function displayProfileData() {
+            const data = localStorage.getItem(PROFILE_KEY);
+            if (data) {
+                profileDisplayContainer.style.display = 'block';
+                profileDisplay.textContent = data;
+            } else {
+                profileDisplayContainer.style.display = 'none';
+            }
+        }
+        
+        // --- LOGIKA EKSPERIMEN STORAGE ---
+        
+        saveLocalBtn.addEventListener('click', () => {
+            const value = experimentInput.value;
+            localStorage.setItem(LOCAL_EXP_KEY, value);
+            localValueDisplay.textContent = value || 'Kosong';
+        });
+
+        saveSessionBtn.addEventListener('click', () => {
+            const value = experimentInput.value;
+            sessionStorage.setItem(SESSION_EXP_KEY, value);
+            sessionValueDisplay.textContent = value || 'Kosong';
+        });
+        
+        clearExperimentBtn.addEventListener('click', () => {
+            localStorage.removeItem(LOCAL_EXP_KEY);
+            sessionStorage.removeItem(SESSION_EXP_KEY);
+            localValueDisplay.textContent = 'Kosong';
+            sessionValueDisplay.textContent = 'Kosong';
+        });
+
+        function loadExperimentData() {
+            const localData = localStorage.getItem(LOCAL_EXP_KEY);
+            const sessionData = sessionStorage.getItem(SESSION_EXP_KEY);
+            localValueDisplay.textContent = localData || 'Kosong';
+            sessionValueDisplay.textContent = sessionData || 'Kosong';
+        }
+        displayProfileData();
+        loadExperimentData();
+        
+    });
+    </script>
+</body>
+</html>
